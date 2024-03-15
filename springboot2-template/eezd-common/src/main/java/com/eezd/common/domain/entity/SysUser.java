@@ -23,11 +23,6 @@ public class SysUser implements Serializable {
     private Long roleId;
 
     /**
-     * 部门ID
-     */
-    private Long deptId;
-
-    /**
      * 用户账号
      */
     private String userName;
