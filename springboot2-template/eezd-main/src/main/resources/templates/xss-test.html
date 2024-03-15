@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>XSS Test</title>
+</head>
+<body>
+<form action="http://localhost:8081/xss-test" method="post" name="demoForm">
+  Name: <input type="text" name="name" value="test<script>alert('Attack!')</script>"/>
+  <input type="submit" value="Submit"/>
+</form>
+</body>
+</html>
