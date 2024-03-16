@@ -61,3 +61,4 @@ public class RedisConfig extends CachingConfigurerSupport {
                 "return tonumber(current);";
     }
 }
+

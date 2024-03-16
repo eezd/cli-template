@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface SysOperLogMapper extends BaseMapper<SysOperLog> {
+    // 根据SysOperLog实体参数去查询结果, 支持多参数查询
     default List<SysOperLog> selectOperLogList(SysOperLog condition) {
         return selectList(Wrappers.lambdaQuery(condition));
     }

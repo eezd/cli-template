@@ -5,21 +5,22 @@ import com.eezd.common.constant.CacheConstants;
 import com.eezd.common.constant.Constants;
 import com.eezd.common.domain.AjaxResult;
 import com.eezd.common.utils.RedisCache;
+import com.eezd.common.utils.StringUtils;
 import com.eezd.common.utils.sign.Base64;
 import com.eezd.common.utils.uuid.IdUtils;
 import com.eezd.main.core.service.SysLoginService;
+import com.eezd.main.core.service.SysRegisterService;
 import com.eezd.main.core.service.TokenService;
-import com.eezd.main.web.system.controller.model.LoginBody;
+import com.eezd.main.web.model.LoginBody;
+import com.eezd.main.web.model.RegisterBody;
 import com.eezd.main.web.system.mapper.SysUserMapper;
 import com.eezd.main.web.system.service.ISysConfigService;
 import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,16 +32,15 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 
 /**
  * 登录验证
  */
-@Api(tags = "登录")
+@Api(tags = "登录注册验证码")
 @RestController
-public class SysLoginController {
+public class SysLoginRegisterController {
 
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
@@ -54,13 +54,17 @@ public class SysLoginController {
     private ISysConfigService sysConfigService;
 
     @Autowired
-    private SysUserMapper sysUserMapper;
-
-    @Autowired
     private RedisCache redisCache;
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private SysRegisterService registerService;
+
+    @Autowired
+    private ISysConfigService configService;
+
 
     /**
      * 登录方法
@@ -72,7 +76,6 @@ public class SysLoginController {
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
-
         // 生成令牌
         String token = loginService.login(
                 loginBody.getUsername(),
@@ -81,51 +84,33 @@ public class SysLoginController {
                 loginBody.getUuid()
         );
         ajax.put(Constants.TOKEN, token);
-
         return ajax;
     }
 
-    @PreAuthorize("hasRole('admin')")
-    @GetMapping("/admin")
-    public AjaxResult admin() {
-        AjaxResult ajax = AjaxResult.success("admin");
-        return ajax;
-    }
-
-    @PreAuthorize("hasAuthority('system:user:query')")
-    @GetMapping("/system/user/query")
-    public AjaxResult systemUserQuery() {
-        AjaxResult ajax = AjaxResult.success("/system/user/query");
-        return ajax;
-    }
-
-    @GetMapping("/user")
-    public AjaxResult user() {
-        AjaxResult ajax = AjaxResult.success("user");
-        // 获取当前认证的Authentication对象
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // 判断当前认证是否有效
-        if (authentication != null && authentication.isAuthenticated()) {
-            // 获取用户的所有角色
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-            // 打印用户的所有角色
-            System.out.println("User Roles: " + authorities);
-
-            // 如果你需要逐个打印角色
-            for (GrantedAuthority authority : authorities) {
-                System.out.println("Role: " + authority.getAuthority());
-            }
-        } else {
-            System.out.println("Authentication is null or not authenticated.");
+    /**
+     * 注册
+     *
+     * @param user
+     * @return
+     */
+    @ApiOperation("注册")
+    @PostMapping("/register")
+    public AjaxResult register(@RequestBody RegisterBody user) {
+        if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser")))) {
+            return AjaxResult.error("当前系统没有开启注册功能！");
         }
-
-
-        return ajax;
+        String msg = registerService.register(user);
+        return StringUtils.isEmpty(msg) ? AjaxResult.success() : AjaxResult.error(msg);
     }
 
-
+    /**
+     * 验证码
+     *
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation("验证码")
     @GetMapping("/captchaImage")
     public AjaxResult getCode(HttpServletResponse response) throws IOException {
         AjaxResult ajax = AjaxResult.success();

@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface SysLogininforMapper extends BaseMapper<SysLogininfor> {
 
+    // 根据SysLogininfor实体参数去查询结果, 支持多参数查询
     default List<SysLogininfor> selectLogininforList(SysLogininfor condition) {
         return selectList(Wrappers.lambdaQuery(condition));
     }

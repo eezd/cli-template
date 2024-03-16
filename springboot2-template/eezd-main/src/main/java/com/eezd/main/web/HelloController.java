@@ -3,6 +3,7 @@ package com.eezd.main.web;
 import com.eezd.common.annotation.Anonymous;
 import com.eezd.common.annotation.Log;
 import com.eezd.common.domain.AjaxResult;
+import com.eezd.common.domain.entity.SysConfig;
 import com.eezd.common.utils.RedisCache;
 import com.eezd.common.enums.BusinessType;
 import com.eezd.main.web.system.vo.RolePermissionVO;
@@ -14,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,12 +46,15 @@ public class HelloController {
     @Autowired
     private RedisCache redisCache;
 
-    @Log(title = "部门管理", businessType = BusinessType.DELETE)
     @Anonymous
     @GetMapping("/")
     @ApiOperation("hello")
     public AjaxResult hello() {
         RolePermissionVO list = sysRoleMapper.selectRolePermission(2L);
+
+        // SysConfig sysConfig = new SysConfig();
+        // sysConfig.setConfigId(3L);
+        // sysConfig.setConfigType("Y2");
 
 
         return AjaxResult.success(list);
@@ -89,6 +94,19 @@ public class HelloController {
         return AjaxResult.success("list");
     }
 
+    @PreAuthorize("hasRole('admin')")
+    @GetMapping("/admin")
+    public AjaxResult admin() {
+        AjaxResult ajax = AjaxResult.success("admin");
+        return ajax;
+    }
+
+    @PreAuthorize("hasAuthority('system:user:query')")
+    @GetMapping("/system/user/query")
+    public AjaxResult systemUserQuery() {
+        AjaxResult ajax = AjaxResult.success("/system/user/query");
+        return ajax;
+    }
 
     @Anonymous
     @PostMapping("/xss-test")

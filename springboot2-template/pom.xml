@@ -95,6 +95,13 @@
                 <version>${swagger.boot.version}</version>
             </dependency>
 
+            <!-- Knife4J 接口文档增强 -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>3.0.3</version>
+            </dependency>
+
             <!-- 验证码 -->
             <dependency>
                 <groupId>pro.fessional</groupId>

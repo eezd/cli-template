@@ -1,6 +1,7 @@
 package com.eezd.main.core.service;
 
 import com.eezd.common.constant.CacheConstants;
+import com.eezd.common.constant.Constants;
 import com.eezd.common.constant.UserConstants;
 import com.eezd.common.utils.RedisCache;
 import com.eezd.common.domain.entity.SysUser;
@@ -8,7 +9,10 @@ import com.eezd.common.exception.ServiceException;
 import com.eezd.common.utils.MessageUtils;
 import com.eezd.common.utils.SecurityUtils;
 import com.eezd.common.utils.StringUtils;
-import com.eezd.main.web.system.controller.model.LoginBody;
+import com.eezd.main.core.manager.AsyncManager;
+import com.eezd.main.core.manager.factory.AsyncFactory;
+import com.eezd.main.web.model.LoginBody;
+import com.eezd.main.web.model.RegisterBody;
 import com.eezd.main.web.system.service.ISysConfigService;
 import com.eezd.main.web.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +34,12 @@ public class SysRegisterService {
 
     /**
      * 注册
+     * msg: 这是最基础的注册功能, 只需要用户名和密码
+     *
+     * @param registerBody
+     * @return
      */
-    public String register(LoginBody registerBody) {
+    public String register(RegisterBody registerBody) {
         String msg = "", username = registerBody.getUsername(), password = registerBody.getPassword();
         SysUser sysUser = new SysUser();
         sysUser.setUserName(username);
@@ -57,11 +65,15 @@ public class SysRegisterService {
         } else {
             sysUser.setNickName(username);
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
+            if (StringUtils.isNull(sysUser.getRoleId())) {
+                sysUser.setRoleId(2L);
+            }
             boolean regFlag = userService.registerUser(sysUser);
             if (!regFlag) {
                 msg = "注册失败,请联系系统管理人员";
             } else {
-                // AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER,
+                        MessageUtils.message("user.register.success")));
             }
         }
         return msg;

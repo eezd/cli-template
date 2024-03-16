@@ -2,11 +2,14 @@ package com.eezd.main.core.service;
 
 
 import com.eezd.common.constant.CacheConstants;
+import com.eezd.common.constant.Constants;
 import com.eezd.common.utils.RedisCache;
 import com.eezd.common.domain.entity.SysUser;
 import com.eezd.common.exception.ServiceException;
 import com.eezd.common.utils.MessageUtils;
 import com.eezd.common.utils.SecurityUtils;
+import com.eezd.main.core.manager.AsyncManager;
+import com.eezd.main.core.manager.factory.AsyncFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -58,6 +61,8 @@ public class SysPasswordService {
         }
         // 超过最大重试次数, 抛出异常
         if (retryCount >= Integer.valueOf(maxRetryCount).intValue()) {
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
+                    MessageUtils.message("user.password.retry.limit.exceed", maxRetryCount, lockTime)));
             throw new ServiceException(MessageUtils.message("user.password.retry.limit.exceed", maxRetryCount, lockTime));
         }
 
@@ -65,6 +70,8 @@ public class SysPasswordService {
         // Authentication联系上下文的user.password 与 参数的 user.password 比较)
         if (!matches(user, password)) {
             retryCount = retryCount + 1;
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL,
+                    MessageUtils.message("user.password.retry.limit.count", retryCount)));
             redisCache.setCacheObject(getCacheKey(username), retryCount, lockTime, TimeUnit.MINUTES);
             throw new ServiceException(MessageUtils.message("user.password.not.match"));
         } else {

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.eezd.common.constant.UserConstants;
 import com.eezd.common.domain.entity.SysUser;
 import com.eezd.common.utils.StringUtils;
+import com.eezd.main.web.system.mapper.SysConfigMapper;
 import com.eezd.main.web.system.mapper.SysUserMapper;
 import com.eezd.main.web.system.service.ISysUserService;
 import org.slf4j.Logger;
@@ -52,4 +53,14 @@ public class SysUserServiceImpl implements ISysUserService {
         return userMapper.insert(user) > 0;
     }
 
+    /**
+     * 修改用户基本信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public int updateUserProfile(SysUser user) {
+        return userMapper.updateById(user);
+    }
 }

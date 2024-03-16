@@ -9,6 +9,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 
 import java.util.ArrayList;
 
@@ -17,12 +18,14 @@ import java.util.ArrayList;
  */
 @Configuration
 @EnableOpenApi
+@EnableKnife4j
 public class SwaggerConfig {
     /**
      * 用于读取配置文件 application.properties 中 swagger 属性是否开启
      */
     @Value("${swagger.enabled}")
     private Boolean swaggerEnabled;
+
 
     @Bean
     public Docket docket() {

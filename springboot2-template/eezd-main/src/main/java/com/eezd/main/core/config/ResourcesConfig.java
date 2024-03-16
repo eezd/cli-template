@@ -1,15 +1,34 @@
 package com.eezd.main.core.config;
 
+import com.eezd.common.config.eezdConfig;
+import com.eezd.common.constant.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+public class ResourcesConfig implements WebMvcConfigurer {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        /** 本地文件上传路径 */
+        registry.addResourceHandler(Constants.RESOURCE_PREFIX + "/**")
+                .addResourceLocations("file:" + eezdConfig.getProfile() + "/");
+
+        /** swagger配置 */
+        registry.addResourceHandler("/swagger-ui/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+                .setCacheControl(CacheControl.maxAge(5, TimeUnit.HOURS).cachePublic());
+        ;
+    }
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")// 允许跨域访问的路径
@@ -42,4 +61,6 @@ public class CorsConfig implements WebMvcConfigurer {
         // 返回新的CorsFilter
         return new CorsFilter(source);
     }
+
+
 }
