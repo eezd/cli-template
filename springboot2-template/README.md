@@ -72,7 +72,7 @@ spring:
     # 地址
     host: localhost
     # 端口，默认为6379
-    port: 26379
+    port: 6379
     # 数据库索引
     database: 1
     # 密码
