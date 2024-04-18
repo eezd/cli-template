@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eezd.main.web.system.mapper.SysRoleMapper">
+    <resultMap id="RolePermissionResultMap" type="com.eezd.main.web.system.vo.RolePermissionVO">
+        <result column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+        <result column="role_key" property="roleKey"/>
+        <result column="role_sort" property="roleSort"/>
+        <result column="status" property="status"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <collection property="sysPermission" ofType="com.eezd.common.domain.entity.SysPermission">
+            <result column="premission_id" property="premissionId"/>
+            <result column="premission_name" property="premissionName"/>
+            <result column="perms" property="perms"/>
+            <!-- Tips: 请勿添加 remake 属性, 如果需要添加请与上面不同 -->
+            <!-- 否则这里的remake属性会匹配到上面的值 -->
+        </collection>
+    </resultMap>
+    <select id="selectRolePermission" resultMap="RolePermissionResultMap">
+        SELECT sr.*, sp.*
+        FROM sys_role sr
+        LEFT JOIN sys_role_permission srp on sr.role_id = srp.role_id
+        LEFT JOIN sys_permission sp on srp.premission_id = sp.premission_id
+        WHERE sr.role_id = #{role_id}
+    </select>
+</mapper>
