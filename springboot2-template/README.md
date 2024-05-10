@@ -2,8 +2,6 @@
 
 # main
 
-
-
 如果不需要 mysql_ssl, 可以把 `useSSL=${ssl.config}` 改成 `useSSL=false`
 
 `eezd-main/src/main/resources/application.yml`
@@ -28,12 +26,24 @@ ssl:
   cert:
     #path: file:E:/Code/ssl
     path: classpath:mysql_ssl/
-  config: true&verifyServerCertificate=true&requireSSL=true&clientCertificateKeyStoreUrl=${ssl.cert.path}/keystoremysql&clientCertificateKeyStorePassword=123456&trustCertificateKeyStoreUrl=${ssl.cert.path}/truststoremysql&trustCertificateKeyStorePassword=123456
+  config: true&
+    verifyServerCertificate=true&
+    requireSSL=true&
+    clientCertificateKeyStoreUrl=${ssl.cert.path}/keystore.jks&
+    clientCertificateKeyStorePassword=123456&
+    trustCertificateKeyStoreUrl=${ssl.cert.path}/truststore.jks&
+    trustCertificateKeyStorePassword=123456
 
 spring:
   datasource:
-    #url: jdbc:mysql://127.0.0.1:3306/eezd_sys?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&tinyInt1isBit=true&useSSL=false
-    url: jdbc:mysql://127.0.0.1:3306/eezd_sys?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&tinyInt1isBit=true&useSSL=${ssl.config}
+    url: jdbc:mysql://127.0.0.1:3306/eezd_sys?
+      serverTimezone=Asia/Shanghai&
+      useUnicode=true&
+      characterEncoding=utf-8&
+      zeroDateTimeBehavior=convertToNull&
+      allowPublicKeyRetrieval=true&
+      tinyInt1isBit=true&
+      useSSL=${ssl.config}
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -145,6 +155,19 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*,/xss-test/*
+```
+
+生成JDBC用的证书, 请先确保你已经使用 openSSL 生成了证书
+
+```sh
+# 包含受信任的 CA 证书的存储库
+keytool -importcert -alias Cacert -file ca.pem -keystore truststoremysql -storepass 123456
+
+# 中间件, 用于导出和共享证书和私钥，以便在不同的系统和应用程序之间进行迁移和交换。
+openssl pkcs12 -export -in client-cert.pem -inkey client-key.pem -name "mysqlclient" -passout pass:123456 -out client-keystore.p12
+
+# 包含客户端的证书和私钥，用于进行客户端身份验证
+keytool -importkeystore -srckeystore client-keystore.p12 -srcstoretype pkcs12 -srcstorepass 123456 -destkeystore keystoremysql -deststoretype JKS -deststorepass 123456
 ```
 
 ## Redis
