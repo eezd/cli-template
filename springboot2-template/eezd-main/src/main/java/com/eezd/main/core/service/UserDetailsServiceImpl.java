@@ -1,6 +1,5 @@
 package com.eezd.main.core.service;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.eezd.common.domain.LoginUser;
 import com.eezd.common.domain.entity.SysPermission;
@@ -9,10 +8,10 @@ import com.eezd.common.enums.UserStatus;
 import com.eezd.common.exception.ServiceException;
 import com.eezd.common.utils.MessageUtils;
 import com.eezd.common.utils.StringUtils;
-import com.eezd.main.web.system.vo.RolePermissionVO;
 import com.eezd.main.web.system.mapper.SysPermissionMapper;
 import com.eezd.main.web.system.mapper.SysRoleMapper;
 import com.eezd.main.web.system.mapper.SysUserMapper;
+import com.eezd.main.web.system.vo.RolePermissionVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 获取数据库 user
+        // 查询数据库中对应的用户名称
         QueryWrapper<SysUser> user_queryWrapper = new QueryWrapper<>();
         user_queryWrapper.eq("user_name", username);
         SysUser user = sysUserMapper.selectOne(user_queryWrapper);
@@ -71,6 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user.getUserId() == 1L) {
             userRoleQuery.setSysPermission(sysPermissionMapper.selectList(null));
         }
+
         // 添加角色
         permissions.add(new SimpleGrantedAuthority("ROLE_".concat(userRoleQuery.getRoleKey())));
         List<SysPermission> userPermissions = userRoleQuery.getSysPermission();

@@ -1,6 +1,5 @@
 package com.eezd.main.core.service;
 
-
 import com.eezd.common.constant.CacheConstants;
 import com.eezd.common.constant.Constants;
 import com.eezd.common.domain.LoginUser;
@@ -30,26 +29,19 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class TokenService {
+    protected static final long MILLIS_SECOND = 1000;
+    protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
     private static final Logger log = LoggerFactory.getLogger(TokenService.class);
-
+    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
     // 令牌自定义标识
     @Value("${token.header}")
     private String header;
-
     // 令牌秘钥
     @Value("${token.secret}")
     private String secret;
-
     // 令牌有效期（默认30分钟）
     @Value("${token.expireTime}")
     private int expireTime;
-
-    protected static final long MILLIS_SECOND = 1000;
-
-    protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
-
-    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
-
     @Autowired
     private RedisCache redisCache;
 

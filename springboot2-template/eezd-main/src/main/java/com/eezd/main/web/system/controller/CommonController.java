@@ -1,41 +1,60 @@
 package com.eezd.main.web.system.controller;
 
 import com.eezd.common.config.eezdConfig;
+import com.eezd.common.constant.CacheConstants;
 import com.eezd.common.constant.Constants;
 import com.eezd.common.domain.AjaxResult;
+import com.eezd.common.utils.RedisCache;
 import com.eezd.common.utils.StringUtils;
 import com.eezd.common.utils.file.FileUploadUtils;
 import com.eezd.common.utils.file.FileUtils;
+import com.eezd.common.utils.sign.Base64;
+import com.eezd.common.utils.uuid.IdUtils;
 import com.eezd.main.core.config.ServerConfig;
+import com.eezd.main.web.system.service.ISysConfigService;
+import com.google.code.kaptcha.Producer;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.FastByteArrayOutputStream;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 通用请求处理
  */
-@ApiIgnore
+// @ApiIgnore
+@Api(tags = "通用请求处理")
 @RestController
 @RequestMapping("/common")
 public class CommonController {
     private static final Logger log = LoggerFactory.getLogger(CommonController.class);
-
+    private static final String FILE_DELIMETER = ",";
     @Autowired
     private ServerConfig serverConfig;
-
-    private static final String FILE_DELIMETER = ",";
+    @Autowired
+    private ISysConfigService sysConfigService;
+    @Resource(name = "captchaProducer")
+    private Producer captchaProducer;
+    @Resource(name = "captchaProducerMath")
+    private Producer captchaProducerMath;
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 通用下载请求
@@ -44,7 +63,12 @@ public class CommonController {
      * @param delete   是否删除
      */
     @GetMapping("/download")
-    public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
+    public void fileDownload(
+            String fileName,
+            Boolean delete,
+            HttpServletResponse response,
+            HttpServletRequest request
+    ) {
         try {
             if (!FileUtils.checkAllowDownload(fileName)) {
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
@@ -64,10 +88,16 @@ public class CommonController {
     }
 
     /**
-     * 通用上传请求（单个）
+     * 通用上传请求(单个)
      */
+    @ApiOperation("通用上传请求(单个)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "文件", dataType = "__file", required = true, paramType = "form"),
+    })
     @PostMapping("/upload")
-    public AjaxResult uploadFile(MultipartFile file) throws Exception {
+    public AjaxResult uploadFile(
+            @RequestBody MultipartFile file
+    ) throws Exception {
         try {
             // 上传文件路径
             String filePath = eezdConfig.getUploadPath();
@@ -86,8 +116,12 @@ public class CommonController {
     }
 
     /**
-     * 通用上传请求（多个）
+     * 通用上传请求(多个)
      */
+    @ApiOperation("通用上传请求(多个)")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "files", value = "文件", allowMultiple = true, dataType = "__file", required = true, paramType = "form"),
+    })
     @PostMapping("/uploads")
     public AjaxResult uploadFiles(List<MultipartFile> files) throws Exception {
         try {
@@ -139,5 +173,55 @@ public class CommonController {
         } catch (Exception e) {
             log.error("下载文件失败", e);
         }
+    }
+
+    /**
+     * 验证码
+     *
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @ApiOperation("验证码")
+    @GetMapping("/captchaImage")
+    public AjaxResult getCode(HttpServletResponse response) throws IOException {
+        AjaxResult ajax = AjaxResult.success();
+        boolean captchaEnabled = sysConfigService.selectCaptchaEnabled();
+        ajax.put("captchaEnabled", captchaEnabled);
+        if (!captchaEnabled) {
+            return ajax;
+        }
+
+        // 保存验证码信息
+        String uuid = IdUtils.simpleUUID();
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
+
+        String capStr = null, code = null;
+        BufferedImage image = null;
+
+        // 生成验证码
+        String captchaType = eezdConfig.getCaptchaType();
+        if ("math".equals(captchaType)) {
+            String capText = captchaProducerMath.createText();
+            capStr = capText.substring(0, capText.lastIndexOf("@"));
+            code = capText.substring(capText.lastIndexOf("@") + 1);
+            image = captchaProducerMath.createImage(capStr);
+        } else if ("char".equals(captchaType)) {
+            capStr = code = captchaProducer.createText();
+            image = captchaProducer.createImage(capStr);
+        }
+
+        redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        // 转换流信息写出
+        FastByteArrayOutputStream os = new FastByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "jpg", os);
+        } catch (IOException e) {
+            return AjaxResult.error(e.getMessage());
+        }
+
+        ajax.put("uuid", uuid);
+        ajax.put("img", Base64.encode(os.toByteArray()));
+        return ajax;
     }
 }

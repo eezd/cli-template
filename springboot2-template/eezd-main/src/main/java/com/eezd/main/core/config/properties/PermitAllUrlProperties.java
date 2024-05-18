@@ -21,12 +21,9 @@ import java.util.regex.Pattern;
 @Configuration
 public class PermitAllUrlProperties implements InitializingBean, ApplicationContextAware {
     private static final Pattern PATTERN = Pattern.compile("\\{(.*?)\\}");
-
-    private ApplicationContext applicationContext;
-
-    private List<String> urls = new ArrayList<>();
-
     public String ASTERISK = "*";
+    private ApplicationContext applicationContext;
+    private List<String> urls = new ArrayList<>();
 
     @Override
     public void afterPropertiesSet() {

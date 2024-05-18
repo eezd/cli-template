@@ -5,10 +5,10 @@ import com.eezd.common.constant.Constants;
 import com.eezd.common.constant.UserConstants;
 import com.eezd.common.domain.LoginUser;
 import com.eezd.common.domain.entity.SysUser;
-import com.eezd.common.utils.DateUtils;
-import com.eezd.common.utils.RedisCache;
 import com.eezd.common.exception.ServiceException;
+import com.eezd.common.utils.DateUtils;
 import com.eezd.common.utils.MessageUtils;
+import com.eezd.common.utils.RedisCache;
 import com.eezd.common.utils.StringUtils;
 import com.eezd.common.utils.ip.IpUtils;
 import com.eezd.main.core.manager.AsyncManager;
@@ -56,7 +56,7 @@ public class SysLoginService {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             // 设置联系上下文, 后续方便SysPasswordService获取信息
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            // 该方法会去调用 UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
@@ -74,7 +74,7 @@ public class SysLoginService {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
 
-        // 生成token
+        // 生成token (token+user数据会一同保存在redis里)
         return tokenService.createToken(loginUser);
     }
 

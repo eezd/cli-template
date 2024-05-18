@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+// const fs = require("fs");
 
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST,
@@ -6,6 +7,11 @@ const pool = mysql.createPool({
   password: process.env.MYSQL_HOST_PASSWORD,
   port: process.env.MYSQL_HOST_PORT,
   database: process.env.MYSQL_HOST_DATABASE,
+  // ssl: {
+  //   ca: fs.readFileSync("./ca.pem"), // CA证书
+  //   key: fs.readFileSync("./client-key.pem"), // 客户端私钥
+  //   cert: fs.readFileSync("./client-cert.pem"), // 客户端证书
+  // },
 });
 
 let query = function (sql, values = []) {

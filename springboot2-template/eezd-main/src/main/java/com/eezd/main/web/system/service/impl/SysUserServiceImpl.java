@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.eezd.common.constant.UserConstants;
 import com.eezd.common.domain.entity.SysUser;
 import com.eezd.common.utils.StringUtils;
-import com.eezd.main.web.system.mapper.SysConfigMapper;
 import com.eezd.main.web.system.mapper.SysUserMapper;
 import com.eezd.main.web.system.service.ISysUserService;
 import org.slf4j.Logger;

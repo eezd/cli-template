@@ -1,5 +1,7 @@
 package com.eezd.common.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,6 +18,7 @@ public class SysOperLog implements Serializable {
      * 日志主键
      */
     @ApiModelProperty(value = "日志ID")
+    @TableId(type = IdType.AUTO)
     private Long operId;
 
     /**
@@ -59,12 +62,6 @@ public class SysOperLog implements Serializable {
      */
     @ApiModelProperty(value = "操作人员")
     private String operName;
-
-    /**
-     * 部门名称
-     */
-    @ApiModelProperty(value = "部门名称")
-    private String deptName;
 
     /**
      * 请求url

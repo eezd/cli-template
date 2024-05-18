@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import com.eezd.common.annotation.Log;
 import com.eezd.common.domain.LoginUser;
 import com.eezd.common.domain.entity.SysOperLog;
-import com.eezd.common.domain.entity.SysUser;
 import com.eezd.common.enums.HttpMethod;
 import com.eezd.common.utils.DateUtils;
 import com.eezd.common.utils.SecurityUtils;
@@ -38,13 +37,11 @@ import java.util.Map;
 @Aspect
 @Component
 public class LogAspect {
-    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
-
     /**
      * 排除敏感属性字段
      */
     public static final String[] EXCLUDE_PROPERTIES = {"password", "oldPassword", "newPassword", "confirmPassword"};
-
+    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
     /**
      * 计算操作消耗时间
      */
@@ -93,7 +90,7 @@ public class LogAspect {
             operLog.setOperUrl(StringUtils.substring(ServletUtils.getRequest().getRequestURI(), 0, 255));
             if (loginUser != null) {
                 operLog.setOperName(loginUser.getUsername());
-                SysUser currentUser = loginUser.getUser();
+                // SysUser currentUser = loginUser.getUser();
                 // if (StringUtils.isNotNull(currentUser) && StringUtils.isNotNull(currentUser.getDept())) {
                 //     operLog.setDeptName(currentUser.getDept().getDeptName());
                 // }

@@ -4,15 +4,16 @@ import com.eezd.common.annotation.Anonymous;
 import com.eezd.common.annotation.Log;
 import com.eezd.common.domain.AjaxResult;
 import com.eezd.common.domain.entity.SysConfig;
-import com.eezd.common.utils.RedisCache;
 import com.eezd.common.enums.BusinessType;
-import com.eezd.main.web.system.vo.RolePermissionVO;
+import com.eezd.common.utils.RedisCache;
 import com.eezd.main.web.system.mapper.SysConfigMapper;
 import com.eezd.main.web.system.mapper.SysRoleMapper;
 import com.eezd.main.web.system.mapper.SysRolePermissionMapper;
 import com.eezd.main.web.system.mapper.SysUserMapper;
+import com.eezd.main.web.system.vo.RolePermissionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,9 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Api(tags = "hello测试")
 @RestController
 @Slf4j
-@Api(tags = "hello")
 public class HelloController {
 
     @Autowired
@@ -46,16 +47,14 @@ public class HelloController {
     @Autowired
     private RedisCache redisCache;
 
-    @Anonymous
+    @ApiOperation(value = "hello", notes = "hello测试模块")
     @GetMapping("/")
-    @ApiOperation("hello")
     public AjaxResult hello() {
         RolePermissionVO list = sysRoleMapper.selectRolePermission(2L);
 
         // SysConfig sysConfig = new SysConfig();
         // sysConfig.setConfigId(3L);
         // sysConfig.setConfigType("Y2");
-
 
         return AjaxResult.success(list);
     }
@@ -94,6 +93,7 @@ public class HelloController {
         return AjaxResult.success("list");
     }
 
+    @ApiOperation("测试是否拥有admin角色")
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/admin")
     public AjaxResult admin() {
@@ -101,6 +101,7 @@ public class HelloController {
         return ajax;
     }
 
+    @ApiOperation("测试是否拥有system:user:query权限")
     @PreAuthorize("hasAuthority('system:user:query')")
     @GetMapping("/system/user/query")
     public AjaxResult systemUserQuery() {
@@ -108,20 +109,39 @@ public class HelloController {
         return ajax;
     }
 
+    @ApiOperation("xss测试")
     @Anonymous
     @PostMapping("/xss-test")
-    @ApiOperation("xss-test")
-    public String xssTest(@RequestParam(value = "name") String name,
-                          HttpServletRequest request, HttpServletResponse response, ModelMap m) {
+    public String xssTest(
+            @RequestParam(value = "name") String name,
+            HttpServletRequest request, HttpServletResponse response, ModelMap m
+    ) {
         return "name is:" + name;
     }
 
+    @ApiOperation("redis测试")
     @Anonymous
-    @ApiOperation("redis-test")
     @GetMapping("/redis-test")
     public String redisTest() {
         redisCache.setCacheObject("key", "value");
         String name = (String) redisCache.getCacheObject("key");
         return "name is:" + name;
+    }
+
+    @ApiOperation("@Log测试")
+    @Log(title = "log-test", businessType = BusinessType.OTHER)
+    @PostMapping("/log-test")
+    public AjaxResult testLog(
+            @ApiParam(value = "密码", required = true, example = "123456")
+            @RequestParam(value = "psw") String psw
+    ) {
+        // 设置账号初始密码为1234567
+        SysConfig sysConfig = new SysConfig();
+        sysConfig.setConfigId(2L);
+        sysConfig.setConfigValue(psw);
+
+        int result = sysConfigMapper.updateById(sysConfig);
+
+        return AjaxResult.success(result);
     }
 }

@@ -14,15 +14,12 @@ public class Seq {
 
     // 上传序列类型
     public static final String uploadSeqType = "UPLOAD";
-
-    // 通用接口序列数
-    private static AtomicInteger commSeq = new AtomicInteger(1);
-
-    // 上传接口序列数
-    private static AtomicInteger uploadSeq = new AtomicInteger(1);
-
     // 机器标识
     private static final String machineCode = "A";
+    // 通用接口序列数
+    private static AtomicInteger commSeq = new AtomicInteger(1);
+    // 上传接口序列数
+    private static AtomicInteger uploadSeq = new AtomicInteger(1);
 
     /**
      * 获取通用序列号

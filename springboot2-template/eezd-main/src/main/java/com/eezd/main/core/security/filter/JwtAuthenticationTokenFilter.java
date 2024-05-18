@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * token过滤器 验证token有效性
- * msg: 该方法会在每次请求时获取token并设置Authentication值
+ * JWT过滤器
+ * 该方法会在请求时验证 token 然后设置 Authentication 值
  */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {

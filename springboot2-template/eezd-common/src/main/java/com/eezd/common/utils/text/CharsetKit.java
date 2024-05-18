@@ -1,9 +1,9 @@
 package com.eezd.common.utils.text;
 
+import com.eezd.common.utils.StringUtils;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import com.eezd.common.utils.StringUtils;
 
 /**
  * 字符集工具类

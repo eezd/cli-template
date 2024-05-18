@@ -35,12 +35,12 @@ public class FileUploadUtils {
      */
     private static String defaultBaseDir = eezdConfig.getProfile();
 
-    public static void setDefaultBaseDir(String defaultBaseDir) {
-        FileUploadUtils.defaultBaseDir = defaultBaseDir;
-    }
-
     public static String getDefaultBaseDir() {
         return defaultBaseDir;
+    }
+
+    public static void setDefaultBaseDir(String defaultBaseDir) {
+        FileUploadUtils.defaultBaseDir = defaultBaseDir;
     }
 
     /**

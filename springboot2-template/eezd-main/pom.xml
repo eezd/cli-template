@@ -17,11 +17,11 @@
 
     <dependencies>
         <!-- 测试模块 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <groupId>org.springframework.boot</groupId> -->
+        <!--     <artifactId>spring-boot-starter-test</artifactId> -->
+        <!--     <scope>test</scope> -->
+        <!-- </dependency> -->
 
         <!-- UA -->
         <dependency>
@@ -44,7 +44,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.18</version>
+                <version>${spring-boot.version}</version>
                 <configuration>
                     <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
                 </configuration>
@@ -56,6 +56,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -65,6 +66,21 @@
                     <warName>${project.artifactId}</warName>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.2.0</version> <!-- 根据需要使用最新版本 -->
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>
