@@ -31,7 +31,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * 获取当前Date型日期
      *
      * @return Date()
-     * exam: Wed Mar 13 13:52:35 CST 2024
+     * exam: Wed Mar 13 13:52:35 CST 2024 
      */
     public static Date getNowDate() {
         return new Date();

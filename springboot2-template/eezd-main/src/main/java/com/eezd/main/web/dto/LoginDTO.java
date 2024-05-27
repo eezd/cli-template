@@ -1,4 +1,4 @@
-package com.eezd.main.web.model;
+package com.eezd.main.web.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 @ApiModel(value = "用户登录对象")
 @Data
-public class LoginBody implements Serializable {
+public class LoginDTO implements Serializable {
     /**
      * 用户名
      */
@@ -21,7 +21,7 @@ public class LoginBody implements Serializable {
     /**
      * 用户密码
      */
-    @ApiModelProperty(value = "用户密码", example = "Admin123")
+    @ApiModelProperty(value = "用户密码", example = "admin123")
     private String password;
 
     /**

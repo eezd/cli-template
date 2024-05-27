@@ -46,11 +46,12 @@ public class SysConfigServiceImpl implements ISysConfigService {
     public SysConfig selectConfigById(Long configId) {
         SysConfig config = new SysConfig();
         config.setConfigId(configId);
-        return configMapper.selectConfig(config);
+        return configMapper.selectConfigOne(config);
     }
 
     /**
      * 根据键名查询参数配置信息
+     * 优先从Redis中查询, 没有则查询数据库
      *
      * @param configKey 参数key
      * @return 参数键值
@@ -63,7 +64,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
         }
         SysConfig config = new SysConfig();
         config.setConfigKey(configKey);
-        SysConfig retConfig = configMapper.selectConfig(config);
+        SysConfig retConfig = configMapper.selectConfigOne(config);
         if (StringUtils.isNotNull(retConfig)) {
             redisCache.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue());
             return retConfig.getConfigValue();
@@ -93,7 +94,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public List<SysConfig> selectConfigList(SysConfig config) {
-        return configMapper.selectList(null);
+        return configMapper.selectConfigList(config);
     }
 
     /**
@@ -105,6 +106,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
     @Override
     public int insertConfig(SysConfig config) {
         int row = configMapper.insert(config);
+        System.out.println(config);
         if (row > 0) {
             redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
         }

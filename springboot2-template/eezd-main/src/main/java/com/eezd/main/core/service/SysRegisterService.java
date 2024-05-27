@@ -11,7 +11,7 @@ import com.eezd.common.utils.SecurityUtils;
 import com.eezd.common.utils.StringUtils;
 import com.eezd.main.core.manager.AsyncManager;
 import com.eezd.main.core.manager.factory.AsyncFactory;
-import com.eezd.main.web.model.RegisterBody;
+import com.eezd.main.web.dto.RegisterDTO;
 import com.eezd.main.web.system.service.ISysConfigService;
 import com.eezd.main.web.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class SysRegisterService {
      * @param registerBody
      * @return
      */
-    public String register(RegisterBody registerBody) {
+    public String register(RegisterDTO registerBody) {
         String msg = "", username = registerBody.getUsername(), password = registerBody.getPassword();
         SysUser sysUser = new SysUser();
         sysUser.setUserName(username);

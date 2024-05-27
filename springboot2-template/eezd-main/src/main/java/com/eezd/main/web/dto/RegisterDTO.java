@@ -1,4 +1,4 @@
-package com.eezd.main.web.model;
+package com.eezd.main.web.dto;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -8,5 +8,5 @@ import lombok.Data;
  */
 @ApiModel(value = "注册登录对象")
 @Data
-public class RegisterBody extends LoginBody {
+public class RegisterDTO extends LoginDTO {
 }

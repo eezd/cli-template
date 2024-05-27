@@ -21,11 +21,6 @@ public class LoginUser implements UserDetails {
     private Long userId;
 
     /**
-     * 部门ID
-     */
-    private Long deptId;
-
-    /**
      * 用户唯一标识
      */
     private String token;
@@ -73,18 +68,6 @@ public class LoginUser implements UserDetails {
     public LoginUser() {
     }
 
-    public LoginUser(SysUser user, List<SimpleGrantedAuthority> roles) {
-        this.user = user;
-        this.roles = roles;
-    }
-
-
-    public LoginUser(Long userId, Long deptId, SysUser user) {
-        this.userId = userId;
-        this.deptId = deptId;
-        this.user = user;
-    }
-
     public LoginUser(Long userId, SysUser user, List<SimpleGrantedAuthority> roles) {
         this.userId = userId;
         this.user = user;
@@ -98,14 +81,6 @@ public class LoginUser implements UserDetails {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
     }
 
     public String getToken() {

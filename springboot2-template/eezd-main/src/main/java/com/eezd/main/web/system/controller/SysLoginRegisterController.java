@@ -6,8 +6,8 @@ import com.eezd.common.utils.StringUtils;
 import com.eezd.main.core.service.SysLoginService;
 import com.eezd.main.core.service.SysRegisterService;
 import com.eezd.main.core.service.TokenService;
-import com.eezd.main.web.model.LoginBody;
-import com.eezd.main.web.model.RegisterBody;
+import com.eezd.main.web.dto.LoginDTO;
+import com.eezd.main.web.dto.RegisterDTO;
 import com.eezd.main.web.system.service.ISysConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,19 +40,19 @@ public class SysLoginRegisterController {
     /**
      * 登录方法
      *
-     * @param loginBody 登录信息
+     * @param loginDTO 登录信息
      * @return 结果
      */
     @ApiOperation("登录")
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody) {
+    public AjaxResult login(@RequestBody LoginDTO loginDTO) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String token = loginService.login(
-                loginBody.getUsername(),
-                loginBody.getPassword(),
-                loginBody.getCode(),
-                loginBody.getUuid()
+                loginDTO.getUsername(),
+                loginDTO.getPassword(),
+                loginDTO.getCode(),
+                loginDTO.getUuid()
         );
         ajax.put(Constants.TOKEN, token);
         return ajax;
@@ -66,7 +66,7 @@ public class SysLoginRegisterController {
      */
     @ApiOperation("注册")
     @PostMapping("/register")
-    public AjaxResult register(@RequestBody RegisterBody user) {
+    public AjaxResult register(@RequestBody RegisterDTO user) {
         if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser")))) {
             return AjaxResult.error("当前系统没有开启注册功能！");
         }

@@ -6,6 +6,7 @@ import com.eezd.common.domain.AjaxResult;
 import com.eezd.common.domain.entity.SysConfig;
 import com.eezd.common.enums.BusinessType;
 import com.eezd.common.utils.RedisCache;
+import com.eezd.common.utils.SecurityUtils;
 import com.eezd.main.web.system.mapper.SysConfigMapper;
 import com.eezd.main.web.system.mapper.SysRoleMapper;
 import com.eezd.main.web.system.mapper.SysRolePermissionMapper;
@@ -89,8 +90,9 @@ public class HelloController {
         //
         // log.info("end_data:{}", end_data);
 
+        // log.info();
 
-        return AjaxResult.success("list");
+        return AjaxResult.success(SecurityUtils.getAuthentication());
     }
 
     @ApiOperation("测试是否拥有admin角色")

@@ -1,6 +1,19 @@
 参考 Ruoyi-Vue, 但是删除了部门这个功能, 权限管理不使用`SS`, 后续文档会说明
 
 
+
+更新日志: [Update](md/update.md)
+
+## 开发文档
+
+- 主要分为两个部分
+  - [System](md/system.md)
+    - 对系统的构成和原理进行说明
+  - [Utils](md/utils.md)
+    - 对系统的使用进行说明
+
+
+
 ## 使用
 
 请先创建 `eezd-main/src/main/resources/application.yml` 文件, 按照个人需求修改完毕后, 再运行程序
@@ -143,12 +156,3 @@ openssl pkcs12 -export -in client-cert.pem -inkey client-key.pem -name "mysqlcli
 # 包含客户端的证书和私钥，用于进行客户端身份验证
 keytool -importkeystore -srckeystore client-keystore.p12 -srcstoretype pkcs12 -srcstorepass 123456 -destkeystore keystoremysql -deststoretype JKS -deststorepass 123456
 ```
-
-
-## 开发文档
-
-- 主要分为两个部分
-  - [System](md/system.md)
-    - 对系统的构成和原理进行说明
-  - [Utils](md/utils.md)
-    - 对系统的使用进行说明

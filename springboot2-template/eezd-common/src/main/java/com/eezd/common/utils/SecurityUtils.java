@@ -24,21 +24,15 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取部门ID
-     **/
-    public static Long getDeptId() {
-        try {
-            return getLoginUser().getDeptId();
-        } catch (Exception e) {
-            throw new ServiceException("获取部门ID异常", HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    /**
-     * 获取用户账户
+     * 获取用户名
      **/
     public static String getUsername() {
         try {
+            // if ("anonymousUser".equals(getAuthentication().getPrincipal())) {
+            //     return "anonymousUser";
+            // } else {
+            //     return getLoginUser().getUsername();
+            // }
             return getLoginUser().getUsername();
         } catch (Exception e) {
             throw new ServiceException("获取用户账户异常", HttpStatus.UNAUTHORIZED);

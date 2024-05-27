@@ -2,6 +2,13 @@
 
 
 
+- 2024/05/27
+  - 添加了自动填充(createBy, createTime, updateBy, updateTime)
+  
+  - 完善了 `SysConfigController`
+  
+  - 优化了DTO类
+
 - 2024/05/18
   - 接口文档降级到 2.0.9
   - 给大部分请求添加了接口文档注解 `mysql-connector-java ---> mysql-connector-j`
