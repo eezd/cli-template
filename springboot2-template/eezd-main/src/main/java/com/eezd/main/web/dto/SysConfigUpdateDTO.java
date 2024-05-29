@@ -6,23 +6,23 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+@ApiModel(value = "系统配置更新请求体")
 @Data
-@ApiModel(description = "系统配置更新请求体")
 public class SysConfigUpdateDTO implements Serializable {
 
     @ApiModelProperty(value = "配置ID", required = true, example = "2")
     private Long configId;
 
-    @ApiModelProperty(value = "参数名称", example = "测试系统配置")
+    @ApiModelProperty(value = "参数名称")
     private String configName;
 
-    @ApiModelProperty(value = "参数键名", example = "system.config.testApi")
+    @ApiModelProperty(value = "参数键名")
     private String configKey;
 
-    @ApiModelProperty(value = "参数键值", example = "True")
+    @ApiModelProperty(value = "参数键值")
     private String configValue;
 
-    @ApiModelProperty(value = "系统内置（Y是 N否）", example = "Y")
+    @ApiModelProperty(value = "系统内置（Y是 N否）")
     private String configType;
 
     @ApiModelProperty(value = "备注")

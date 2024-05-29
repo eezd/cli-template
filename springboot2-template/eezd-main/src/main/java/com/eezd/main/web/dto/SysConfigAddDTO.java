@@ -6,7 +6,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-@ApiModel(description = "系统配置添加请求体")
+@ApiModel(value = "系统配置添加请求体")
 @Data
 public class SysConfigAddDTO implements Serializable {
 

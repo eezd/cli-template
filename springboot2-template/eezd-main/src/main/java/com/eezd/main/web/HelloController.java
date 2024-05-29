@@ -19,10 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +45,12 @@ public class HelloController {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Anonymous
+    @PostMapping("/test1")
+    public SysConfig test1(@Validated @RequestBody SysConfig sysConfigTest) {
+        return sysConfigTest;
+    }
 
     @ApiOperation(value = "hello", notes = "hello测试模块")
     @GetMapping("/")
@@ -103,13 +107,6 @@ public class HelloController {
         return ajax;
     }
 
-    @ApiOperation("测试是否拥有system:user:query权限")
-    @PreAuthorize("hasAuthority('system:user:query')")
-    @GetMapping("/system/user/query")
-    public AjaxResult systemUserQuery() {
-        AjaxResult ajax = AjaxResult.success("/system/user/query");
-        return ajax;
-    }
 
     @ApiOperation("xss测试")
     @Anonymous

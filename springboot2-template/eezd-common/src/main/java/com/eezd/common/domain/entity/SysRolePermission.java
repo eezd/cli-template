@@ -8,16 +8,11 @@ import java.io.Serializable;
 
 @Data
 public class SysRolePermission implements Serializable {
-    /**
-     * 角色ID
-     */
-    @ApiModelProperty("角色ID")
+
+    @ApiModelProperty(value = "角色ID", position = 1)
     @TableId
     private Long roleId;
 
-    /**
-     * 权限ID
-     */
-    @ApiModelProperty("权限ID")
+    @ApiModelProperty(value = "权限ID", position = 2)
     private Long premissionId;
 }

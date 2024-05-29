@@ -14,107 +14,56 @@ public class SysOperLog implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 日志主键
-     */
-    @ApiModelProperty(value = "日志ID")
+    @ApiModelProperty(value = "日志ID", position = 1)
     @TableId(type = IdType.AUTO)
     private Long operId;
 
-    /**
-     * 操作模块
-     */
-    @ApiModelProperty(value = "操作模块")
+    @ApiModelProperty(value = "操作模块", position = 2)
     private String title;
 
-    /**
-     * 业务类型（0其它 1新增 2修改 3删除）
-     */
-    @ApiModelProperty(value = "业务类型（0其它 1新增 2修改 3删除）")
+    @ApiModelProperty(value = "业务类型(0其它 1新增 2修改 3删除)", position = 3, allowableValues = "0,1,2,3")
     private Integer businessType;
 
-    /**
-     * 业务类型数组
-     */
-    @ApiModelProperty(value = "业务类型数组")
+    @ApiModelProperty(value = "业务类型数组", position = 4)
     private Integer[] businessTypes;
 
-    /**
-     * 请求方法
-     */
-    @ApiModelProperty(value = "请求方法")
+    @ApiModelProperty(value = "请求方法", position = 5)
     private String method;
 
-    /**
-     * 请求方式
-     */
-    @ApiModelProperty(value = "请求方式")
+    @ApiModelProperty(value = "请求方式", position = 6)
     private String requestMethod;
 
-    /**
-     * 操作类别（0其它 1后台用户 2手机端用户）
-     */
-    @ApiModelProperty(value = "操作类别（0其它 1后台用户 2手机端用户）")
+    @ApiModelProperty(value = "操作类别(0其它 1后台用户 2手机端用户)", position = 7, allowableValues = "0,1,2")
     private Integer operatorType;
 
-    /**
-     * 操作人员
-     */
-    @ApiModelProperty(value = "操作人员")
+    @ApiModelProperty(value = "操作人员", position = 8)
     private String operName;
 
-    /**
-     * 请求url
-     */
-    @ApiModelProperty(value = "请求URL")
+    @ApiModelProperty(value = "请求URL", position = 9)
     private String operUrl;
 
-    /**
-     * 操作地址
-     */
-    @ApiModelProperty(value = "操作地址")
+    @ApiModelProperty(value = "操作地址", position = 10)
     private String operIp;
 
-    /**
-     * 操作地点
-     */
-    @ApiModelProperty(value = "操作地点")
+    @ApiModelProperty(value = "操作地点", position = 11)
     private String operLocation;
 
-    /**
-     * 请求参数
-     */
-    @ApiModelProperty(value = "请求参数")
+    @ApiModelProperty(value = "请求参数", position = 12)
     private String operParam;
 
-    /**
-     * 返回参数
-     */
-    @ApiModelProperty(value = "返回参数")
+    @ApiModelProperty(value = "返回参数", position = 13)
     private String jsonResult;
 
-    /**
-     * 操作状态（0正常 1异常）
-     */
-    @ApiModelProperty(value = "操作状态（0正常 1异常）")
+    @ApiModelProperty(value = "操作状态(0正常 1异常)", position = 14, allowableValues = "0,1")
     private Integer status;
 
-    /**
-     * 错误消息
-     */
-    @ApiModelProperty(value = "错误消息")
+    @ApiModelProperty(value = "错误消息", position = 15)
     private String errorMsg;
 
-    /**
-     * 操作时间
-     */
-    @ApiModelProperty(value = "操作时间")
+    @ApiModelProperty(value = "操作时间", position = 16)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date operTime;
 
-    /**
-     * 消耗时间
-     */
-    @ApiModelProperty(value = "消耗时间")
+    @ApiModelProperty(value = "消耗时间", position = 17)
     private Long costTime;
 }

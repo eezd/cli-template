@@ -6,8 +6,10 @@ import com.eezd.common.exception.ServiceException;
 import com.eezd.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 全局异常处理器
@@ -76,6 +79,16 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 请求的JSON格式有错误
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public AjaxResult handleHttpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.error("请求路径 '{}' 出现错误：无法读取 JSON 请求体。", requestURI, e);
+        return AjaxResult.error(String.format("无法读取请求体，请检查 JSON 格式。请求路径：'%s'", requestURI));
+    }
+
+    /**
      * 拦截未知的运行时异常
      */
     @ExceptionHandler(RuntimeException.class)
@@ -102,7 +115,7 @@ public class GlobalExceptionHandler {
     public AjaxResult handleBindException(BindException e) {
         log.error(e.getMessage(), e);
         String message = e.getAllErrors().get(0).getDefaultMessage();
-        return AjaxResult.error(message);
+        return AjaxResult.error("1");
     }
 
     /**
@@ -110,9 +123,18 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Object handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error(e.getMessage(), e);
-        String message = e.getBindingResult().getFieldError().getDefaultMessage();
-        return AjaxResult.error(message);
+        log.error(e.getMessage());
+
+        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        StringBuilder errorMessages = new StringBuilder();
+
+        for (FieldError fieldError : fieldErrors) {
+            String fieldName = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
+            errorMessages.append(fieldName).append(": ").append(errorMessage).append("; ");
+        }
+
+        return AjaxResult.error(String.valueOf(errorMessages));
     }
 
 }

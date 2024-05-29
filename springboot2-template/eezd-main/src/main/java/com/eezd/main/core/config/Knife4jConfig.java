@@ -34,7 +34,7 @@ public class Knife4jConfig implements WebMvcConfigurer {
                 .enable(knife4jEnabled)
                 .select()
                 // 过滤条件，扫描指定路径下的文件
-                .apis(RequestHandlerSelectors.basePackage("com.eezd.main.web"))
+                .apis(RequestHandlerSelectors.basePackage("com.eezd"))
                 // 指定路径处理，PathSelectors.any()代表不过滤任何路径
                 .paths(PathSelectors.any())
                 .build();

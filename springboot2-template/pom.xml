@@ -39,6 +39,7 @@
         <jwt.version>0.11.5</jwt.version>
         <ua.version>1.21</ua.version>
         <lombok.version>1.18.30</lombok.version>
+        <jakarta.validation.version>3.0.2</jakarta.validation.version>
     </properties>
 
     <dependencyManagement>
@@ -140,6 +141,12 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
+
+            <!-- <dependency> -->
+            <!--     <groupId>jakarta.validation</groupId> -->
+            <!--     <artifactId>jakarta.validation-api</artifactId> -->
+            <!--     <version>${jakarta.validation.version}</version> -->
+            <!-- </dependency> -->
         </dependencies>
     </dependencyManagement>
 

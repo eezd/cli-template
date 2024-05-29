@@ -4,83 +4,59 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.eezd.common.constant.ValidationConstant;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
 public class SysRole implements Serializable {
-    /**
-     * 角色ID
-     */
-    @ApiModelProperty(value = "角色ID")
+
+    @ApiModelProperty(value = "角色ID", position = 1)
     @TableId(type = IdType.AUTO)
     private Long roleId;
 
-    /**
-     * 角色名称
-     */
-    @ApiModelProperty(value = "角色名称")
+    @ApiModelProperty(value = "角色名称", position = 2, example = "测试角色")
     private String roleName;
 
-
-    /**
-     * 角色权限
-     */
-    @ApiModelProperty(value = "角色权限")
+    @ApiModelProperty(value = "角色权限", position = 3, example = "test")
     private String roleKey;
 
-    /**
-     * 角色排序
-     */
-    @ApiModelProperty(value = "角色排序")
+    @ApiModelProperty(value = "角色排序", position = 4, example = "3")
     private Integer roleSort;
 
-    /**
-     * 角色状态（0正常 1停用）
-     */
-    @ApiModelProperty(value = "角色状态（0正常 1停用）")
+    @ApiModelProperty(value = "角色状态(0正常 1停用)", position = 5, allowableValues = "0,1", example = "0")
+    @Range(min = 0, max = 1)
     private String status;
 
-    /**
-     * 删除标志（0代表存在 2代表删除）
-     */
-    @ApiModelProperty(value = "删除标志（0代表存在 2代表删除）")
+    @ApiModelProperty(value = "删除标志(0代表存在 1代表删除)", position = 6, allowableValues = "0,1", example = "0")
+    @Range(min = 0, max = 1)
     private String delFlag;
 
-    /**
-     * 创建人
-     */
-    @ApiModelProperty(value = "创建人")
+    @ApiModelProperty(value = "创建人", hidden = true, position = 7)
+    @Null(message = ValidationConstant.EMPTY_MSG)
     @TableField(fill = FieldFill.INSERT)
     private String createBy;
 
-    /**
-     * 创建时间
-     */
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "创建时间", hidden = true, position = 8)
+    @Null(message = ValidationConstant.EMPTY_MSG)
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
-    /**
-     * 更新人
-     */
-    @ApiModelProperty(value = "更新人")
+    @ApiModelProperty(value = "更新人", hidden = true, position = 9)
+    @Null(message = ValidationConstant.EMPTY_MSG)
     @TableField(fill = FieldFill.UPDATE)
     private String updateBy;
 
-    /**
-     * 更新时间
-     */
-    @ApiModelProperty(value = "更新时间")
+    @ApiModelProperty(value = "更新时间", hidden = true, position = 10)
+    @Null(message = ValidationConstant.EMPTY_MSG)
     @TableField(fill = FieldFill.UPDATE)
     private Date updateTime;
 
-    /**
-     * 备注
-     */
-    @ApiModelProperty(value = "备注")
+    @ApiModelProperty(value = "备注", position = 11)
     private String remark;
 }
