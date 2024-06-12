@@ -1,11 +1,14 @@
 package com.eezd.main.core.exception;
 
 import com.eezd.common.constant.HttpStatus;
+import com.eezd.common.constant.ValidationConstant;
 import com.eezd.common.domain.AjaxResult;
 import com.eezd.common.exception.ServiceException;
+import com.eezd.common.utils.MessageUtils;
 import com.eezd.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
@@ -119,7 +122,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 自定义验证异常
+     * Validated 参数异常
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Object handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -131,7 +134,20 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : fieldErrors) {
             String fieldName = fieldError.getField();
             String errorMessage = fieldError.getDefaultMessage();
-            errorMessages.append(fieldName).append(": ").append(errorMessage).append("; ");
+            // errorMessages.append(fieldName).append(": ").append(errorMessage).append("; ");
+
+            try {
+                // 尝试获取国际化消息
+                errorMessage = MessageUtils.message(errorMessage);
+            } catch (NoSuchMessageException ignored) {
+                if (errorMessage != null && errorMessage.equals(ValidationConstant.NOT_EMPTY_MSG)) {
+                    errorMessage = fieldName + ": " + ValidationConstant.NOT_EMPTY_MSG;
+                } else if (errorMessage != null && errorMessage.equals(ValidationConstant.EMPTY_MSG)) {
+                    errorMessage = fieldName + ": " + ValidationConstant.EMPTY_MSG;
+                }
+            }
+
+            errorMessages.append(errorMessage).append("; ");
         }
 
         return AjaxResult.error(String.valueOf(errorMessages));

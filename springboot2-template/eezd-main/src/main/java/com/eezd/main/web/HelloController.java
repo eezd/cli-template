@@ -3,7 +3,9 @@ package com.eezd.main.web;
 import com.eezd.common.annotation.Anonymous;
 import com.eezd.common.annotation.Log;
 import com.eezd.common.domain.AjaxResult;
+import com.eezd.common.domain.ValidationGroup;
 import com.eezd.common.domain.entity.SysConfig;
+import com.eezd.common.domain.entity.SysUser;
 import com.eezd.common.enums.BusinessType;
 import com.eezd.common.utils.RedisCache;
 import com.eezd.common.utils.SecurityUtils;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.groups.Default;
 
 @Api(tags = "hello测试")
 @RestController
@@ -48,7 +51,10 @@ public class HelloController {
 
     @Anonymous
     @PostMapping("/test1")
-    public SysConfig test1(@Validated @RequestBody SysConfig sysConfigTest) {
+    public SysUser test1(
+            @Validated({ValidationGroup.AddGroup.class, Default.class})
+            @RequestBody SysUser sysConfigTest
+    ) {
         return sysConfigTest;
     }
 

@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.eezd.common.constant.ValidationConstant;
+import com.eezd.common.domain.ValidationGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,13 +20,16 @@ import java.util.Date;
 public class SysRole implements Serializable {
 
     @ApiModelProperty(value = "角色ID", position = 1)
+    @NotNull(message = ValidationConstant.NOT_EMPTY_MSG, groups = {ValidationGroup.UpdateGroup.class})
     @TableId(type = IdType.AUTO)
     private Long roleId;
 
     @ApiModelProperty(value = "角色名称", position = 2, example = "测试角色")
+    @NotEmpty(message = ValidationConstant.NOT_EMPTY_MSG, groups = {ValidationGroup.AddGroup.class})
     private String roleName;
 
     @ApiModelProperty(value = "角色权限", position = 3, example = "test")
+    @NotEmpty(message = ValidationConstant.NOT_EMPTY_MSG, groups = {ValidationGroup.AddGroup.class})
     private String roleKey;
 
     @ApiModelProperty(value = "角色排序", position = 4, example = "3")

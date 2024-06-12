@@ -2,11 +2,14 @@
 
 
 
+- 2024/06/12
+  - 完善参数校验 `Validation`
+  
 - 2024/05/27
   - 添加了自动填充(createBy, createTime, updateBy, updateTime)
-  
+
   - 完善了 `SysConfigController`
-  
+
   - 优化了DTO类
 
 - 2024/05/18

@@ -2,10 +2,10 @@ package com.eezd.main.web.system.controller;
 
 import com.eezd.common.annotation.Log;
 import com.eezd.common.domain.AjaxResult;
+import com.eezd.common.domain.ValidationGroup;
 import com.eezd.common.domain.entity.SysConfig;
 import com.eezd.common.enums.BusinessType;
 import com.eezd.main.web.dto.SysConfigAddDTO;
-import com.eezd.main.web.dto.SysConfigUpdateDTO;
 import com.eezd.main.web.system.service.ISysConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.groups.Default;
 import java.util.List;
 
 @Api(tags = "系统配置")
@@ -48,13 +49,10 @@ public class SysConfigController {
     @PreAuthorize("hasAuthority('system:config:add')")
     @Log(title = "系统配置", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    public AjaxResult add(@RequestBody SysConfigAddDTO config) {
-        SysConfig sysConfig = new SysConfig();
-        sysConfig.setConfigName(config.getConfigName());
-        sysConfig.setConfigKey(config.getConfigKey());
-        sysConfig.setConfigValue(config.getConfigValue());
-        sysConfig.setConfigType(config.getConfigType());
-
+    public AjaxResult add(
+            @Validated({ValidationGroup.AddGroup.class, Default.class})
+            @RequestBody SysConfigAddDTO sysConfig
+    ) {
         if (!configService.checkConfigKeyUnique(sysConfig)) {
             return AjaxResult.error("新增参数'" + sysConfig.getConfigName() + "'失败，参数键名已存在");
         }
@@ -66,13 +64,10 @@ public class SysConfigController {
     @PreAuthorize("hasAuthority('system:config:update')")
     @Log(title = "系统配置", businessType = BusinessType.UPDATE)
     @PostMapping("/update")
-    public AjaxResult update(@Validated @RequestBody SysConfigUpdateDTO config) {
-        SysConfig sysConfig = new SysConfig();
-        sysConfig.setConfigName(config.getConfigName());
-        sysConfig.setConfigKey(config.getConfigKey());
-        sysConfig.setConfigValue(config.getConfigValue());
-        sysConfig.setConfigType(config.getConfigType());
-
+    public AjaxResult update(
+            @Validated({ValidationGroup.UpdateGroup.class, Default.class})
+            @RequestBody SysConfig sysConfig
+    ) {
         if (!configService.checkConfigKeyUnique(sysConfig)) {
             return AjaxResult.error("修改参数'" + sysConfig.getConfigName() + "'失败，参数键名已存在");
         }

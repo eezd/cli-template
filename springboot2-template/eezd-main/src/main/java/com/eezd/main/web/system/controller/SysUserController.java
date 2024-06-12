@@ -2,6 +2,7 @@ package com.eezd.main.web.system.controller;
 
 import com.eezd.common.annotation.Log;
 import com.eezd.common.domain.AjaxResult;
+import com.eezd.common.domain.ValidationGroup;
 import com.eezd.common.domain.entity.SysUser;
 import com.eezd.common.enums.BusinessType;
 import com.eezd.common.utils.SecurityUtils;
@@ -16,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.groups.Default;
 import java.util.List;
 
 @Api(tags = "用户信息")
@@ -41,10 +43,16 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('system:user:add')")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysUserAddDTO userDTO) {
+    public AjaxResult add(
+            @Validated({ValidationGroup.AddGroup.class, Default.class})
+            @RequestBody SysUserAddDTO userDTO
+    ) {
         SysUser user = new SysUser();
         BeanUtils.copyProperties(userDTO, user);
 
+        if (StringUtils.isNull(user.getRoleId())) {
+            user.setRoleId(2L);
+        }
 
         if (!userService.checkUserNameUnique(user)) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
@@ -54,10 +62,8 @@ public class SysUserController {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
 
-
-        // user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        // return AjaxResult.toAjax(userService.insertUser(user));
-        return AjaxResult.success(userDTO);
+        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        return AjaxResult.toAjax(userService.insertUser(user));
     }
 
     /**
@@ -67,6 +73,10 @@ public class SysUserController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PostMapping("/update")
     public AjaxResult edit(@Validated @RequestBody SysUser user) {
+        if (StringUtils.isNotEmpty(user.getPassword())) {
+            user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        }
+
         if (!userService.checkUserNameUnique(user)) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，登录账号已存在");
         } else if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(user)) {
@@ -74,7 +84,6 @@ public class SysUserController {
         } else if (StringUtils.isNotEmpty(user.getEmail()) && !userService.checkEmailUnique(user)) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-        // user.setUpdateBy(getUsername());
         return AjaxResult.toAjax(userService.updateUser(user));
     }
 

@@ -62,26 +62,6 @@ public class Constants {
     public static final String LOGIN_FAIL = "Error";
 
     /**
-     * 所有权限标识
-     */
-    public static final String ALL_PERMISSION = "*:*:*";
-
-    /**
-     * 管理员角色权限标识
-     */
-    public static final String SUPER_ADMIN = "admin";
-
-    /**
-     * 角色权限分隔符
-     */
-    public static final String ROLE_DELIMETER = ",";
-
-    /**
-     * 权限标识分隔符
-     */
-    public static final String PERMISSION_DELIMETER = ",";
-
-    /**
      * 验证码有效期（分钟）
      */
     public static final Integer CAPTCHA_EXPIRATION = 2;
@@ -115,16 +95,6 @@ public class Constants {
      * 用户头像
      */
     public static final String JWT_AVATAR = "avatar";
-
-    /**
-     * 创建时间
-     */
-    public static final String JWT_CREATED = "created";
-
-    /**
-     * 用户权限
-     */
-    public static final String JWT_AUTHORITIES = "authorities";
 
     /**
      * 资源映射路径 前缀

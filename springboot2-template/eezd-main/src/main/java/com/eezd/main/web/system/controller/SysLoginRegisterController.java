@@ -2,6 +2,7 @@ package com.eezd.main.web.system.controller;
 
 import com.eezd.common.constant.Constants;
 import com.eezd.common.domain.AjaxResult;
+import com.eezd.common.domain.ValidationGroup;
 import com.eezd.common.utils.StringUtils;
 import com.eezd.main.core.service.SysLoginService;
 import com.eezd.main.core.service.SysRegisterService;
@@ -12,9 +13,12 @@ import com.eezd.main.web.system.service.ISysConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.groups.Default;
 
 
 /**
@@ -66,13 +70,15 @@ public class SysLoginRegisterController {
      */
     @ApiOperation("注册")
     @PostMapping("/register")
-    public AjaxResult register(@RequestBody RegisterDTO user) {
+    public AjaxResult register(
+            @Validated({ValidationGroup.AddGroup.class, Default.class})
+            @RequestBody RegisterDTO user
+    ) {
         if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser")))) {
             return AjaxResult.error("当前系统没有开启注册功能！");
         }
         String msg = registerService.register(user);
         return StringUtils.isEmpty(msg) ? AjaxResult.success() : AjaxResult.error(msg);
     }
-
 
 }
