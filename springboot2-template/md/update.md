@@ -2,9 +2,16 @@
 
 
 
+- 2024/06/14
+  - 完善 `SysPermission` 和 `SysRole` 和 `SysRolePermission` 的控制器及基础增删改功能
+  
+  - 补充 `validation.BindException` 异常拦截
+  
+  - 将字符串判断为空的参数检测替换为 `@NotBlank`
+  
 - 2024/06/12
   - 完善参数校验 `Validation`
-  
+
 - 2024/05/27
   - 添加了自动填充(createBy, createTime, updateBy, updateTime)
 

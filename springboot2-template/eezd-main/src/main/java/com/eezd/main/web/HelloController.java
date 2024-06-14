@@ -11,9 +11,7 @@ import com.eezd.common.utils.RedisCache;
 import com.eezd.common.utils.SecurityUtils;
 import com.eezd.main.web.system.mapper.SysConfigMapper;
 import com.eezd.main.web.system.mapper.SysRoleMapper;
-import com.eezd.main.web.system.mapper.SysRolePermissionMapper;
 import com.eezd.main.web.system.mapper.SysUserMapper;
-import com.eezd.main.web.system.vo.RolePermissionVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,9 +39,6 @@ public class HelloController {
     private SysRoleMapper sysRoleMapper;
 
     @Autowired
-    private SysRolePermissionMapper sysRolePermissionMapper;
-
-    @Autowired
     private SysConfigMapper sysConfigMapper;
 
     @Autowired
@@ -61,13 +56,13 @@ public class HelloController {
     @ApiOperation(value = "hello", notes = "hello测试模块")
     @GetMapping("/")
     public AjaxResult hello() {
-        RolePermissionVO list = sysRoleMapper.selectRolePermission(2L);
+        // RolePermissionVO list = sysRoleMapper.selectRolePermission(2L);
 
         // SysConfig sysConfig = new SysConfig();
         // sysConfig.setConfigId(3L);
         // sysConfig.setConfigType("Y2");
 
-        return AjaxResult.success(list);
+        return AjaxResult.success();
     }
 
     @Anonymous

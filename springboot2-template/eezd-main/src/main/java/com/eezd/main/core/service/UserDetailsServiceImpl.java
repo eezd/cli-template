@@ -10,6 +10,7 @@ import com.eezd.common.utils.MessageUtils;
 import com.eezd.common.utils.StringUtils;
 import com.eezd.main.web.system.mapper.SysPermissionMapper;
 import com.eezd.main.web.system.mapper.SysRoleMapper;
+import com.eezd.main.web.system.mapper.SysRolePermissionMapper;
 import com.eezd.main.web.system.mapper.SysUserMapper;
 import com.eezd.main.web.system.vo.RolePermissionVO;
 import org.slf4j.Logger;
@@ -36,6 +37,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
+
+    @Autowired
+    private SysRolePermissionMapper sysRolePermissionMapper;
 
     @Autowired
     private SysPermissionMapper sysPermissionMapper;
@@ -66,7 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // 添加权限
         List<SimpleGrantedAuthority> permissions = new ArrayList<>();
-        RolePermissionVO userRoleQuery = sysRoleMapper.selectRolePermission(user.getUserId());
+        RolePermissionVO userRoleQuery = sysRolePermissionMapper.selectRolePermission(user.getUserId());
         if (user.getUserId() == 1L) {
             userRoleQuery.setSysPermission(sysPermissionMapper.selectList(null));
         }

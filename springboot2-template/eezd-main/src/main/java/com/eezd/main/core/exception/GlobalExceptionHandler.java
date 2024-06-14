@@ -12,6 +12,7 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -112,13 +113,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 自定义验证异常
+     * Validated 参数为Null异常(@NotNull)
      */
     @ExceptionHandler(BindException.class)
     public AjaxResult handleBindException(BindException e) {
-        log.error(e.getMessage(), e);
-        String message = e.getAllErrors().get(0).getDefaultMessage();
-        return AjaxResult.error("1");
+        BindingResult bindingResult = e.getBindingResult();
+        StringBuilder errorMessage = new StringBuilder("参数验证失败：");
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            String fieldName = fieldError.getField();
+            String errorMessageSub = fieldError.getDefaultMessage();
+            errorMessage.append(fieldName).append(": ").append(errorMessageSub).append("; ");
+        }
+
+        log.error(e.getMessage());
+        return AjaxResult.error(String.valueOf(errorMessage));
     }
 
     /**
@@ -129,7 +137,7 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage());
 
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        StringBuilder errorMessages = new StringBuilder();
+        StringBuilder errorMessages = new StringBuilder("参数验证失败: ");
 
         for (FieldError fieldError : fieldErrors) {
             String fieldName = fieldError.getField();

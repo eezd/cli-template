@@ -1,15 +1,15 @@
 package com.eezd.main.web.dto;
 
-import com.eezd.common.domain.entity.SysUser;
+import com.eezd.common.domain.entity.SysRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
-@ApiModel(value = "用户ADD对象")
+@ApiModel(value = "角色ADD对象")
 @Data
-public class SysUserAddDTO extends SysUser {
+public class SysRoleAddDTO extends SysRole {
 
     @JsonIgnore
-    private Long userId;
+    private Long roleId;
 }
 

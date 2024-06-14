@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
@@ -25,22 +25,23 @@ public class SysRole implements Serializable {
     private Long roleId;
 
     @ApiModelProperty(value = "角色名称", position = 2, example = "测试角色")
-    @NotEmpty(message = ValidationConstant.NOT_EMPTY_MSG, groups = {ValidationGroup.AddGroup.class})
+    @NotBlank(message = ValidationConstant.NOT_EMPTY_MSG, groups = {ValidationGroup.AddGroup.class})
     private String roleName;
 
     @ApiModelProperty(value = "角色权限", position = 3, example = "test")
-    @NotEmpty(message = ValidationConstant.NOT_EMPTY_MSG, groups = {ValidationGroup.AddGroup.class})
+    @NotBlank(message = ValidationConstant.NOT_EMPTY_MSG, groups = {ValidationGroup.AddGroup.class})
     private String roleKey;
 
     @ApiModelProperty(value = "角色排序", position = 4, example = "3")
+    @Range(min = 0, max = 9999, message = ValidationConstant.ROLE_SORT_MSG)
     private Integer roleSort;
 
     @ApiModelProperty(value = "角色状态(0正常 1停用)", position = 5, allowableValues = "0,1", example = "0")
-    @Range(min = 0, max = 1)
+    @Range(min = 0, max = 1, message = ValidationConstant.ROLE_STATUS_MSG)
     private String status;
 
     @ApiModelProperty(value = "删除标志(0代表存在 1代表删除)", position = 6, allowableValues = "0,1", example = "0")
-    @Range(min = 0, max = 1)
+    @Range(min = 0, max = 1, message = ValidationConstant.DEL_FLAG_MSG)
     private String delFlag;
 
     @ApiModelProperty(value = "创建人", hidden = true, position = 7)

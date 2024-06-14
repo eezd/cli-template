@@ -106,7 +106,6 @@ public class SysConfigServiceImpl implements ISysConfigService {
     @Override
     public int insertConfig(SysConfig config) {
         int row = configMapper.insert(config);
-        System.out.println(config);
         if (row > 0) {
             redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
         }

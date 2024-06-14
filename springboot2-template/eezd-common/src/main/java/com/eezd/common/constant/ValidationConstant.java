@@ -35,6 +35,7 @@ public class ValidationConstant {
 
     public static final String PASSWORD_LENGTH_MSG = "user.password.length.not.valid";
 
+
     /**
      * 必须存在一个大写字母
      */
@@ -63,4 +64,15 @@ public class ValidationConstant {
 
     public static final String Y_OR_N_MSG = "config.type.not.valid";
 
+    public static final String ROLE_SORT_MSG = "角色排序必须是0到9999";
+
+    public static final String ROLE_STATUS_MSG = "角色状态必填(0正常 1停用)";
+
+    public static final String DEL_FLAG_MSG = "删除状态必填(0代表存在 1代表删除)";
+
+    public static final String USER_SEX_MSG = "用户性别必填(0男 1女 2未知)";
+    
+    public static final String USER_STATUS_MSG = "用户状态必填(0正常 1停用)";
+
+    public static final String USER_DEL_FLAG_MSG = "用户删除状态必填(0代表存在 1代表删除)";
 }
